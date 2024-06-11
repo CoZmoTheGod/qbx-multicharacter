@@ -111,12 +111,22 @@ end)
 
 lib.callback.register('qb-multicharacter:callback:GetNumberOfCharacters', function(source)
     local License = QBCore.Functions.GetIdentifier(source, 'license2')
+    local Discord = QBCore.Functions.GetIdentifier(source, 'discord')
+    local slots = Config.DefaultNumberOfCharacters
+
+    -- Check if the player has a custom number of slots
     if Config.PlayersNumberOfCharacters[License] then
-        return Config.PlayersNumberOfCharacters[License]
-    else
-        return Config.DefaultNumberOfCharacters
+        slots = Config.PlayersNumberOfCharacters[License]
     end
+
+    -- Check if the player has additional slots from Discord roles
+    if Config.DiscordRoles[Discord] then
+        slots = slots + Config.DiscordRoles[Discord]
+    end
+
+    return slots
 end)
+
 
 lib.callback.register('qb-multicharacter:callback:GetCurrentCharacters', function(source)
     local Characters = {}
